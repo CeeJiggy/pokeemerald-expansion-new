@@ -80,6 +80,8 @@
 #define FANCOUNTER_FINISHED_CONTEST  2
 #define FANCOUNTER_USED_BATTLE_TOWER 3
 
+#define USED_FLY_WHISTLE 255 // used for determining if Fly or a flying taxi was used
+
 // Return values for DoDeoxysRockInteraction
 #define DEOXYS_ROCK_FAILED     0
 #define DEOXYS_ROCK_PROGRESSED 1

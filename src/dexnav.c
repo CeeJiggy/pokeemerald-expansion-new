@@ -2687,3 +2687,18 @@ void IncrementDexNavChain(void)
     if (gSaveBlock3Ptr->dexNavChain < DEXNAV_CHAIN_MAX)
         gSaveBlock3Ptr->dexNavChain++;
 }
+
+void Task_OpenDexNavFromSubMenu(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        CleanupOverworldWindowsAndTilemaps();
+        DexNavGuiInit(CB2_ReturnToFieldContinueScript);
+        DestroyTask(taskId);
+    }
+}
+
+void OpenDexNavSub()
+{
+    CreateTask(Task_OpenDexNavFromSubMenu, 0);
+}

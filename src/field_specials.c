@@ -995,6 +995,19 @@ static bool32 IsPlayerHousePCTile(u32 tileId)
             || tileId == METATILE_BrendansMaysHouse_MayPC_Off);
 }
 
+void CheckCanFly()
+{
+    if (Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE)
+        gSpecialVar_Result = TRUE;
+    else
+        gSpecialVar_Result = FALSE;
+}
+
+void FieldLoadFlyMap(void)
+{
+    SetMainCallback2(CB2_OpenFlyMap);
+}
+
 static bool8 IsPlayerInFrontOfPC(void)
 {
     s16 x, y;

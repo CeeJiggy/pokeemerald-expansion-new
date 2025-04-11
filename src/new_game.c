@@ -210,6 +210,8 @@ void NewGameInitData(void)
     ResetContestLinkResults();
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     ResetItemFlags();
+    FlagSet(FLAG_SYS_B_DASH);
+    gSaveBlock2Ptr->autoRun = TRUE;
     ResetDexNav();
 }
 

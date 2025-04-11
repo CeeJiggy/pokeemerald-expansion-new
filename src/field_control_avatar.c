@@ -93,6 +93,7 @@ void FieldClearPlayerInput(struct FieldInput *input)
     input->tookStep = FALSE;
     input->pressedBButton = FALSE;
     input->pressedRButton = FALSE;
+    input->pressedLButton = FALSE;
     input->input_field_1_1 = FALSE;
     input->input_field_1_2 = FALSE;
     input->input_field_1_3 = FALSE;
@@ -117,6 +118,8 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
                 input->pressedAButton = TRUE;
             if (newKeys & B_BUTTON)
                 input->pressedBButton = TRUE;
+            if (newKeys & L_BUTTON && !FlagGet(DN_FLAG_SEARCHING))
+                input->pressedLButton = TRUE;
             if (newKeys & R_BUTTON && !FlagGet(DN_FLAG_SEARCHING))
                 input->pressedRButton = TRUE;
         }
@@ -154,6 +157,8 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
         }
     }
 }
+
+extern const u8 EventScript_OpenSubMenu[];
 
 int ProcessPlayerFieldInput(struct FieldInput *input)
 {
@@ -234,6 +239,13 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     
     if (input->pressedRButton && TryStartDexNavSearch())
         return TRUE;
+
+    if (input->pressedLButton)
+    {
+        PlaySE(SE_WIN_OPEN);
+        ScriptContext_SetupScript(EventScript_OpenSubMenu);
+        return TRUE;
+    }
 
     if(input->input_field_1_2 && DEBUG_OVERWORLD_MENU && !DEBUG_OVERWORLD_IN_MENU)
     {
@@ -1270,4 +1282,25 @@ void CancelSignPostMessageBox(struct FieldInput *input)
         return;
 
     CreateTask(Task_OpenStartMenu, 8);
+}
+extern const u8 EventScript_DisableAutoRun[];
+extern const u8 EventScript_EnableAutoRun[];
+
+void EnableAutoRun(void)
+{
+    if (FlagGet(FLAG_SYS_B_DASH))
+    {
+        if (gSaveBlock2Ptr->autoRun)
+        {
+            PlaySE(SE_M_POISON_POWDER);
+            gSaveBlock2Ptr->autoRun = FALSE;
+            ScriptContext_SetupScript(EventScript_DisableAutoRun);
+        }
+        else
+        {
+            PlaySE(SE_FLEE);
+            gSaveBlock2Ptr->autoRun = TRUE;
+            ScriptContext_SetupScript(EventScript_EnableAutoRun);
+        }
+    }
 }

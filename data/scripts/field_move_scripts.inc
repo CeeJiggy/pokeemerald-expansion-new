@@ -418,3 +418,86 @@ EventScript_FailSweetScent::
 
 Text_FailSweetScent:
 	.string "Looks like there's nothing here…$"
+
+EventScript_OpenSubMenu::
+    dynmultipush EventScript_AutoRun, 1
+	goto_if_set FLAG_SYS_DEXNAV_GET, EventScript_AddDexNavMenu
+	goto EventScript_FinishSubMenu
+    end
+
+EventScript_AddDexNavMenu::
+	dynmultipush EventScript_DexNav, 0
+	goto_if_set FLAG_BADGE06_GET, EventScript_AddFlyMenu
+	goto EventScript_FinishSubMenu
+	end
+
+EventScript_AddFlyMenu::
+	dynmultipush EventScript_FlyMenu, 2
+	goto EventScript_FinishSubMenu
+	end
+
+EventScript_FinishSubMenu::
+	dynmultistack 0, 0, FALSE, 3, TRUE, 1,DYN_MULTICHOICE_CB_NONE
+	goto_if_eq VAR_RESULT, 0, EventScript_OpenDexNav
+	goto_if_eq VAR_RESULT, 1, EventScript_ToggleAutoRun
+    goto_if_eq VAR_RESULT, 2, EventScript_CheckFly
+	goto_if_eq VAR_RESULT, 127, EventScript_Release
+
+
+EventScript_CheckFly::
+	special CheckCanFly
+	goto_if_eq VAR_RESULT, TRUE, EventScript_OpenFlyMenu
+	goto EventScript_CantFly
+	end
+	
+EventScript_ToggleAutoRun:
+	special EnableAutoRun
+	waitstate
+	end
+
+EventScript_Release:
+	releaseall
+	end
+
+EventScript_OpenDexNav:
+	fadescreen FADE_TO_BLACK
+	special OpenDexNavSub
+	waitstate
+	end
+
+EventScript_OpenFlyMenu:
+	fadescreen FADE_TO_BLACK
+	setvar VAR_0x800A, USED_FLY_WHISTLE
+	special FieldLoadFlyMap
+	waitstate
+	end
+
+EventScript_AutoRun:
+	.string "Auto Run$"
+
+EventScript_DexNav:
+	.string "DexNav$"
+
+EventScript_FlyMenu:
+	.string "Altaria Whistle$"
+
+EventScript_DisableAutoRun::
+    msgbox AutoRunDisabled MSGBOX_SIGN
+    end
+
+AutoRunDisabled:
+    .string "Auto Run {COLOR RED}Disabled{COLOR DARK_GRAY}.$"
+
+EventScript_EnableAutoRun::
+    msgbox AutoRunEnabled MSGBOX_SIGN
+    end
+
+EventScript_CantFly::
+    msgbox CantFlyMsg MSGBOX_SIGN
+    end
+
+AutoRunEnabled:
+    .string "Auto Run {COLOR GREEN}Enabled{COLOR DARK_GRAY}.$"
+
+CantFlyMsg:
+    .string "Looks like you can't use that here...$"
