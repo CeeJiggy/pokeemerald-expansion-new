@@ -911,6 +911,7 @@ const u8 gText_1st[] = _("1st");
 const u8 gText_2nd[] = _("2nd");
 const u8 gText_3rd[] = _("3rd");
 const u8 gText_4th[] = _("4th");
+const u8 gText_5th[] = _("5th");
 const u8 gText_Friend[] = _("Friend");
 const u8 gText_Pokemon3[] = _("POKeMON"); // Unused
 const u8 gJPText_MysteryGift[] = _("ふしぎなもらいもの");
